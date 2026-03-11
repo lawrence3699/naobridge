@@ -1,0 +1,44 @@
+<!-- Report Page -->
+<view class="page-container">
+  <view class="heading-1 page-title">举报</view>
+
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">举报原因（必选）</view>
+      <view class="reason-options">
+        <view
+          wx:for="{{reasons}}"
+          wx:key="value"
+          class="reason-option {{selectedReason === item.value ? 'reason-selected' : ''}}"
+          bindtap="onSelectReason"
+          data-reason="{{item.value}}"
+        >
+          <text class="reason-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{selectedReason === 'other'}}" class="form-group">
+      <view class="form-label">详细说明（必填）</view>
+      <textarea
+        class="form-textarea"
+        placeholder="请描述具体问题..."
+        value="{{description}}"
+        bindinput="onDescriptionInput"
+        maxlength="500"
+      />
+    </view>
+
+    <view class="notice-box">
+      <text class="notice-text">我们承诺在24小时内处理您的举报。举报人信息将严格保密。</text>
+    </view>
+
+    <button
+      class="btn-primary submit-btn"
+      bindtap="onSubmit"
+      disabled="{{!canSubmit || submitting}}"
+    >
+      {{submitting ? '提交中...' : '提交举报'}}
+    </button>
+  </view>
+</view>

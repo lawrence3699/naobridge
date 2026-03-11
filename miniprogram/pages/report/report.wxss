@@ -1,0 +1,78 @@
+.page-container {
+  padding: 24rpx;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.form-group {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A1A1A;
+  margin-bottom: 12rpx;
+}
+
+.reason-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.reason-option {
+  padding: 20rpx 24rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 12rpx;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.reason-selected {
+  border-color: #2C5F8A;
+  background-color: #E8F0F8;
+}
+
+.reason-label {
+  font-size: 16px;
+  color: #333333;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 8rpx;
+  padding: 16rpx 20rpx;
+  font-size: 16px;
+  line-height: 1.8;
+  box-sizing: border-box;
+}
+
+.notice-box {
+  background-color: #FFF8E1;
+  padding: 20rpx 24rpx;
+  border-radius: 8rpx;
+  margin-bottom: 24rpx;
+}
+
+.notice-text {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.submit-btn {
+  width: 100%;
+  font-size: 18px;
+  min-height: 50px;
+}
+
+.submit-btn[disabled] {
+  background-color: #AAAAAA;
+}

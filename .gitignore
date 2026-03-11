@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# WeChat DevTools
+miniprogram_npm/
+
+# Test coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+
+# Build artifacts
+*.log

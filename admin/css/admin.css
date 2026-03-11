@@ -1,0 +1,242 @@
+/* Admin Dashboard Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1A1A1A;
+  background-color: #F5F5F5;
+}
+
+#app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #2C5F8A;
+  color: #FFFFFF;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-header h1 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 12px 0;
+}
+
+.nav-item {
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 15px;
+}
+
+.nav-item:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.nav-item.active {
+  background-color: rgba(255,255,255,0.2);
+  border-left: 4px solid #FFFFFF;
+  padding-left: 20px;
+}
+
+/* Main content */
+.main-content {
+  margin-left: 240px;
+  padding: 32px;
+  flex: 1;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: #1A1A1A;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stat-card-alert {
+  border-left: 4px solid #FF6B35;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: bold;
+  color: #2C5F8A;
+  margin-bottom: 8px;
+}
+
+.stat-card-alert .stat-value {
+  color: #FF6B35;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #666666;
+}
+
+/* Data Table */
+.data-table {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-collapse: collapse;
+}
+
+.data-table th {
+  background-color: #F0F4F8;
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 14px;
+  color: #666666;
+  font-weight: 600;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.data-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #EEEEEE;
+  font-size: 14px;
+}
+
+.data-table tr:hover {
+  background-color: #FAFAFA;
+}
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-pending { background-color: #FFF3CD; color: #856404; }
+.badge-resolved { background-color: #D4EDDA; color: #155724; }
+.badge-dismissed { background-color: #E2E3E5; color: #383D41; }
+.badge-normal { background-color: #D4EDDA; color: #155724; }
+.badge-muted { background-color: #FFF3CD; color: #856404; }
+.badge-banned { background-color: #F8D7DA; color: #721C24; }
+.badge-hidden { background-color: #E2E3E5; color: #383D41; }
+
+/* Buttons */
+.btn-primary {
+  background-color: #2C5F8A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  min-height: 36px;
+}
+
+.btn-primary:hover {
+  background-color: #1E4468;
+}
+
+.btn-danger {
+  background-color: #DC3545;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #C82333;
+}
+
+.btn-sm {
+  padding: 4px 12px;
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+/* Filter bar */
+.filter-bar {
+  margin-bottom: 16px;
+}
+
+.filter-bar select {
+  padding: 8px 16px;
+  border: 1px solid #CCCCCC;
+  border-radius: 6px;
+  font-size: 14px;
+  min-height: 36px;
+}
+
+/* Add form */
+.add-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.add-form input {
+  padding: 8px 16px;
+  border: 1px solid #CCCCCC;
+  border-radius: 6px;
+  font-size: 14px;
+  min-height: 36px;
+  flex: 1;
+  max-width: 300px;
+}
+
+.add-form select {
+  padding: 8px 16px;
+  border: 1px solid #CCCCCC;
+  border-radius: 6px;
+  font-size: 14px;
+  min-height: 36px;
+}

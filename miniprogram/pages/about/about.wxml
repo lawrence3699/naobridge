@@ -1,0 +1,44 @@
+<!-- About Page -->
+<view class="page-container">
+  <view class="heading-1 page-title">关于脑桥</view>
+
+  <view class="card">
+    <view class="body-text">
+      脑桥（NaoBridge）是一个为脑损伤患者及其家属搭建的在线交流社区。
+    </view>
+    <view class="body-text" style="margin-top: 16rpx;">
+      我们相信，每一位脑损伤患者都值得被尊重、被理解、被支持。在这里，你可以分享康复日记、交流经验、获取科学资讯，也可以找到同路人的温暖。
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="heading-2 section-title">我们的原则</view>
+    <view class="principle-item">
+      <text class="principle-icon">🕊️</text>
+      <view class="principle-content">
+        <text class="principle-name">人道主义优先</text>
+        <text class="principle-desc">用户的尊严和安全感是第一优先级</text>
+      </view>
+    </view>
+    <view class="principle-item">
+      <text class="principle-icon">🧩</text>
+      <view class="principle-content">
+        <text class="principle-name">无障碍为默认</text>
+        <text class="principle-desc">简单、清晰、大字体、高对比度</text>
+      </view>
+    </view>
+    <view class="principle-item">
+      <text class="principle-icon">🔬</text>
+      <view class="principle-content">
+        <text class="principle-name">理性主义护航</text>
+        <text class="principle-desc">鼓励科学讨论，防止伪科学传播</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="disclaimer">
+    本平台不提供医疗建议，内容仅供交流参考。如需医疗帮助，请咨询专业医生。
+  </view>
+
+  <view class="version-text">版本 1.0.0</view>
+</view>

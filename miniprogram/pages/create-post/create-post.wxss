@@ -1,0 +1,148 @@
+/* Create Post Page Styles */
+.page-container {
+  padding: 24rpx;
+  padding-bottom: 48rpx;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.form-group {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A1A1A;
+  margin-bottom: 12rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 48px;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 240rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 8rpx;
+  padding: 16rpx 20rpx;
+  font-size: 16px;
+  line-height: 1.8;
+  box-sizing: border-box;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 13px;
+  color: #999999;
+  margin-top: 8rpx;
+}
+
+/* Category options */
+.category-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.category-option {
+  padding: 12rpx 20rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  min-height: 44px;
+}
+
+.category-selected {
+  border-color: #2C5F8A;
+  background-color: #E8F0F8;
+}
+
+.category-emoji {
+  font-size: 18px;
+}
+
+.category-label {
+  font-size: 14px;
+  color: #333333;
+}
+
+/* Image grid */
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.image-item {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+}
+
+.upload-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.image-remove {
+  position: absolute;
+  top: -12rpx;
+  right: -12rpx;
+  width: 44rpx;
+  height: 44rpx;
+  background-color: #FF4444;
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.image-add {
+  width: 200rpx;
+  height: 200rpx;
+  border: 2rpx dashed #CCCCCC;
+  border-radius: 8rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.add-icon {
+  font-size: 32px;
+  color: #999999;
+}
+
+.add-text {
+  font-size: 13px;
+  color: #999999;
+}
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  margin-top: 16rpx;
+  font-size: 18px;
+  min-height: 50px;
+}
+
+.submit-btn[disabled] {
+  background-color: #AAAAAA;
+}

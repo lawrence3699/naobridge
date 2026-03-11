@@ -1,0 +1,81 @@
+<!-- Create Post Page -->
+<view class="page-container">
+  <view class="heading-1 page-title">发布帖子</view>
+
+  <view class="card">
+    <!-- Title -->
+    <view class="form-group">
+      <view class="form-label">标题</view>
+      <input
+        class="form-input"
+        placeholder="请输入标题"
+        value="{{title}}"
+        bindinput="onTitleInput"
+        maxlength="50"
+      />
+    </view>
+
+    <!-- Category -->
+    <view class="form-group">
+      <view class="form-label">分类标签（必选）</view>
+      <view class="category-options">
+        <view
+          wx:for="{{categories}}"
+          wx:key="value"
+          class="category-option {{selectedCategory === item.value ? 'category-selected' : ''}}"
+          bindtap="onSelectCategory"
+          data-category="{{item.value}}"
+        >
+          <text class="category-emoji">{{item.emoji}}</text>
+          <text class="category-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Content -->
+    <view class="form-group">
+      <view class="form-label">正文</view>
+      <textarea
+        class="form-textarea"
+        placeholder="分享你的故事...（最少10字）"
+        value="{{content}}"
+        bindinput="onContentInput"
+        maxlength="5000"
+        auto-height="true"
+      />
+      <view class="char-count">{{content.length}}/5000</view>
+    </view>
+
+    <!-- Image upload -->
+    <view class="form-group">
+      <view class="form-label">图片（最多9张）</view>
+      <view class="image-grid">
+        <view
+          wx:for="{{images}}"
+          wx:key="*this"
+          class="image-item"
+        >
+          <image class="upload-image" src="{{item}}" mode="aspectFill" />
+          <view class="image-remove" bindtap="onRemoveImage" data-index="{{index}}">✕</view>
+        </view>
+        <view
+          wx:if="{{images.length < 9}}"
+          class="image-add"
+          bindtap="onChooseImage"
+        >
+          <text class="add-icon">+</text>
+          <text class="add-text">添加图片</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Submit -->
+  <button
+    class="btn-primary submit-btn"
+    bindtap="onSubmit"
+    disabled="{{!canSubmit || submitting}}"
+  >
+    {{submitting ? '发布中...' : '发布帖子'}}
+  </button>
+</view>

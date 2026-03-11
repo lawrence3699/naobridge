@@ -1,0 +1,32 @@
+{
+  "description": "Default sensitive word list for NaoBridge forum. Categories per CLAUDE.md spec.",
+  "words": [
+    { "word": "包治百病", "category": "medical-fraud" },
+    { "word": "祖传秘方", "category": "medical-fraud" },
+    { "word": "神药", "category": "medical-fraud" },
+    { "word": "特效药", "category": "medical-fraud" },
+    { "word": "虚假疗法", "category": "medical-fraud" },
+    { "word": "偏方治大病", "category": "medical-fraud" },
+    { "word": "保证治愈", "category": "medical-fraud" },
+    { "word": "根治", "category": "medical-fraud" },
+    { "word": "无效退款", "category": "medical-fraud" },
+    { "word": "免费领取", "category": "ad" },
+    { "word": "广告推销", "category": "ad" },
+    { "word": "加微信", "category": "ad" },
+    { "word": "加我好友", "category": "ad" },
+    { "word": "扫码领取", "category": "ad" },
+    { "word": "限时优惠", "category": "ad" },
+    { "word": "点击链接", "category": "ad" },
+    { "word": "诈骗", "category": "fraud" },
+    { "word": "转账汇款", "category": "fraud" },
+    { "word": "银行卡号", "category": "fraud" },
+    { "word": "中奖通知", "category": "fraud" },
+    { "word": "验证码发我", "category": "fraud" },
+    { "word": "歧视残疾人", "category": "discrimination" },
+    { "word": "废人", "category": "discrimination" },
+    { "word": "脑残", "category": "discrimination" },
+    { "word": "智障", "category": "discrimination" },
+    { "word": "自杀方法", "category": "violence" },
+    { "word": "去死", "category": "violence" }
+  ]
+}

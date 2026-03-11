@@ -1,0 +1,83 @@
+<!-- Home Page — Post List with Category Tabs -->
+<view class="page-container">
+  <!-- Category tabs -->
+  <scroll-view class="tab-bar" scroll-x="true" enable-flex="true">
+    <view
+      wx:for="{{categories}}"
+      wx:key="value"
+      class="tab-item {{activeCategory === item.value ? 'tab-active' : ''}}"
+      bindtap="onSwitchCategory"
+      data-category="{{item.value}}"
+    >
+      <text class="tab-emoji">{{item.emoji}}</text>
+      <text class="tab-label">{{item.label}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- Post list -->
+  <view class="post-list">
+    <block wx:if="{{posts.length > 0}}">
+      <view
+        wx:for="{{posts}}"
+        wx:key="_id"
+        class="card post-card"
+        bindtap="onOpenPost"
+        data-id="{{item._id}}"
+      >
+        <view class="post-header">
+          <text class="post-author">{{item.authorName}}</text>
+          <text class="post-category-tag">{{item.categoryLabel}}</text>
+        </view>
+        <view class="heading-2 post-title">{{item.title}}</view>
+        <view class="post-preview">{{item.contentPreview}}</view>
+
+        <!-- Image preview -->
+        <view wx:if="{{item.images && item.images.length > 0}}" class="post-images">
+          <image
+            wx:for="{{item.images}}"
+            wx:for-item="img"
+            wx:key="*this"
+            wx:if="{{index < 3}}"
+            class="post-thumb"
+            src="{{img}}"
+            mode="aspectFill"
+          />
+          <view wx:if="{{item.images.length > 3}}" class="more-images">
+            <text>+{{item.images.length - 3}}</text>
+          </view>
+        </view>
+
+        <view class="post-footer">
+          <text class="post-stat">浏览 {{item.viewCount}}</text>
+          <text class="post-stat">评论 {{item.commentCount}}</text>
+          <text class="post-time">{{item.timeAgo}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- Empty state -->
+    <view wx:if="{{!loading && posts.length === 0}}" class="empty-state">
+      <text class="empty-text">还没有帖子，来发第一篇吧！</text>
+    </view>
+
+    <!-- Loading -->
+    <view wx:if="{{loading}}" class="loading-state">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- Load more -->
+    <view wx:if="{{hasMore && !loading}}" class="load-more" bindtap="onLoadMore">
+      <text class="load-more-text">加载更多</text>
+    </view>
+  </view>
+
+  <!-- Floating create button -->
+  <view class="fab-button" bindtap="onCreatePost">
+    <text class="fab-icon">+</text>
+  </view>
+
+  <!-- Disclaimer -->
+  <view class="disclaimer footer-disclaimer">
+    本平台不提供医疗建议，内容仅供交流参考
+  </view>
+</view>

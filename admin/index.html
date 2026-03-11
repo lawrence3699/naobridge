@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>脑桥管理后台</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>脑桥管理后台</h1>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-page="dashboard">
+          <span>数据看板</span>
+        </li>
+        <li class="nav-item" data-page="reports">
+          <span>举报管理</span>
+        </li>
+        <li class="nav-item" data-page="users">
+          <span>用户管理</span>
+        </li>
+        <li class="nav-item" data-page="content">
+          <span>内容管理</span>
+        </li>
+        <li class="nav-item" data-page="words">
+          <span>敏感词管理</span>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <!-- Dashboard -->
+      <section id="page-dashboard" class="page active">
+        <h2>数据看板</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="stat-users">--</div>
+            <div class="stat-label">注册用户</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-posts">--</div>
+            <div class="stat-label">帖子总数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-comments">--</div>
+            <div class="stat-label">评论总数</div>
+          </div>
+          <div class="stat-card stat-card-alert">
+            <div class="stat-value" id="stat-reports">--</div>
+            <div class="stat-label">待处理举报</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reports -->
+      <section id="page-reports" class="page">
+        <h2>举报管理</h2>
+        <div class="filter-bar">
+          <select id="report-status-filter">
+            <option value="">全部</option>
+            <option value="pending" selected>待处理</option>
+            <option value="resolved">已处理</option>
+            <option value="dismissed">已驳回</option>
+          </select>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>举报类型</th>
+              <th>举报对象</th>
+              <th>原因</th>
+              <th>时间</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="report-list"></tbody>
+        </table>
+      </section>
+
+      <!-- Users -->
+      <section id="page-users" class="page">
+        <h2>用户管理</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>昵称</th>
+              <th>身份</th>
+              <th>状态</th>
+              <th>注册时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="user-list"></tbody>
+        </table>
+      </section>
+
+      <!-- Content -->
+      <section id="page-content" class="page">
+        <h2>内容管理</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>标题</th>
+              <th>作者</th>
+              <th>分类</th>
+              <th>状态</th>
+              <th>发布时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="content-list"></tbody>
+        </table>
+      </section>
+
+      <!-- Sensitive Words -->
+      <section id="page-words" class="page">
+        <h2>敏感词管理</h2>
+        <div class="add-form">
+          <input type="text" id="new-word" placeholder="输入敏感词">
+          <select id="new-word-category">
+            <option value="ad">广告</option>
+            <option value="fraud">诈骗</option>
+            <option value="discrimination">歧视</option>
+            <option value="medical-fraud">虚假医疗</option>
+            <option value="violence">暴力</option>
+          </select>
+          <button class="btn-primary" id="btn-add-word">添加</button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>敏感词</th>
+              <th>分类</th>
+              <th>添加时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="word-list"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!-- Post Detail Page -->
+<view class="page-container">
+  <block wx:if="{{post}}">
+    <!-- Post content -->
+    <view class="card post-content">
+      <view class="post-meta">
+        <view class="author-info">
+          <image
+            class="author-avatar"
+            src="{{post.author.avatarUrl || '/images/default-avatar.png'}}"
+            mode="aspectFill"
+          />
+          <view class="author-detail">
+            <text class="author-name">{{post.author.nickName}}</text>
+            <text class="post-date">{{postDate}}</text>
+          </view>
+        </view>
+        <text class="category-tag">{{categoryLabel}}</text>
+      </view>
+
+      <view class="heading-1 post-title">{{post.title}}</view>
+
+      <view class="post-body">
+        <text class="body-text">{{post.content}}</text>
+      </view>
+
+      <!-- Images -->
+      <view wx:if="{{post.images && post.images.length > 0}}" class="post-images">
+        <image
+          wx:for="{{post.images}}"
+          wx:key="*this"
+          class="post-image"
+          src="{{item}}"
+          mode="widthFix"
+          bindtap="onPreviewImage"
+          data-url="{{item}}"
+        />
+      </view>
+
+      <!-- Stats -->
+      <view class="post-stats">
+        <text class="stat-item">浏览 {{post.viewCount}}</text>
+        <text class="stat-item">点赞 {{post.likeCount}}</text>
+        <text class="stat-item">评论 {{post.commentCount}}</text>
+      </view>
+    </view>
+
+    <!-- Action buttons -->
+    <view class="action-bar card">
+      <view class="action-btn" bindtap="onReport" data-type="post" data-id="{{post._id}}">
+        <text class="action-text">举报</text>
+      </view>
+      <view wx:if="{{isAuthor}}" class="action-btn action-danger" bindtap="onDeletePost">
+        <text class="action-text">删除</text>
+      </view>
+    </view>
+
+    <!-- Comments section -->
+    <view class="card comments-section">
+      <view class="heading-2 section-title">
+        评论 ({{comments.length}})
+      </view>
+
+      <block wx:if="{{post.commentEnabled}}">
+        <!-- Comment list -->
+        <view wx:for="{{comments}}" wx:key="_id" class="comment-item">
+          <view class="comment-header">
+            <text class="comment-author">{{item.authorName}}</text>
+            <text class="comment-time">{{item.timeAgo}}</text>
+          </view>
+          <text class="comment-content">{{item.content}}</text>
+
+          <!-- Nested replies -->
+          <view wx:if="{{item.replies && item.replies.length > 0}}" class="reply-list">
+            <view wx:for="{{item.replies}}" wx:for-item="reply" wx:key="_id" class="reply-item">
+              <text class="reply-author">{{reply.authorName}}</text>
+              <text class="reply-content">: {{reply.content}}</text>
+            </view>
+          </view>
+
+          <view class="comment-actions">
+            <view class="comment-action" bindtap="onReply" data-id="{{item._id}}" data-name="{{item.authorName}}">
+              <text>回复</text>
+            </view>
+            <view class="comment-action" bindtap="onReport" data-type="comment" data-id="{{item._id}}">
+              <text>举报</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- Empty comments -->
+        <view wx:if="{{comments.length === 0}}" class="empty-comments">
+          <text class="empty-text">还没有评论，来说两句吧</text>
+        </view>
+      </block>
+
+      <view wx:else class="comments-disabled">
+        <text class="disabled-text">帖主已关闭评论</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- Loading -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- Comment input bar (fixed bottom) -->
+  <view wx:if="{{post && post.commentEnabled}}" class="comment-bar">
+    <input
+      class="comment-input"
+      placeholder="{{replyTo ? '回复 ' + replyTo + '...' : '写评论...'}}"
+      value="{{commentText}}"
+      bindinput="onCommentInput"
+      confirm-type="send"
+      bindconfirm="onSendComment"
+    />
+    <button class="btn-primary send-btn" bindtap="onSendComment" disabled="{{!commentText.trim()}}">
+      发送
+    </button>
+  </view>
+</view>
