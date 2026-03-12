@@ -1,0 +1,201 @@
+'use strict';
+
+const { Service } = require('egg');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const VALID_ROLES = ['patient', 'family', 'supporter'];
+const SALT_ROUNDS = 10;
+
+class UserService extends Service {
+
+  /**
+   * Register a new user with profile
+   * @param {object} params - { name, email, password, avatar, role }
+   * @returns {{ user: object, token: string }}
+   */
+  async register({ name, email, password, avatar, role }) {
+    const { ctx } = this;
+
+    if (!name || !email || !password) {
+      ctx.throw(400, 'name, email, and password are required');
+    }
+
+    if (role && !VALID_ROLES.includes(role)) {
+      ctx.throw(400, `role must be one of: ${VALID_ROLES.join(', ')}`);
+    }
+
+    const existing = await ctx.model.User.findOne({ where: { email } });
+    if (existing) {
+      ctx.throw(409, 'Email already registered');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+    const transaction = await ctx.model.transaction();
+    try {
+      const user = await ctx.model.User.create({
+        name,
+        email,
+        password: hashedPassword,
+        avatar: avatar || null,
+        role: role || 'supporter',
+      }, { transaction });
+
+      await ctx.model.Userprofile.create({
+        userId: user.id,
+      }, { transaction });
+
+      await transaction.commit();
+
+      const token = this.generateToken(user);
+      const userData = user.toJSON();
+      delete userData.password;
+
+      return { user: userData, token };
+    } catch (err) {
+      await transaction.rollback();
+      throw err;
+    }
+  }
+
+  /**
+   * Authenticate user by email and password
+   * @param {object} params - { email, password }
+   * @returns {{ user: object, token: string }}
+   */
+  async login({ email, password }) {
+    const { ctx } = this;
+
+    if (!email || !password) {
+      ctx.throw(400, 'email and password are required');
+    }
+
+    const user = await ctx.model.User.findOne({ where: { email } });
+    if (!user) {
+      ctx.throw(401, 'Invalid email or password');
+    }
+
+    if (user.status === 'banned') {
+      ctx.throw(403, 'Account has been banned');
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      ctx.throw(401, 'Invalid email or password');
+    }
+
+    const token = this.generateToken(user);
+    const userData = user.toJSON();
+    delete userData.password;
+
+    return { user: userData, token };
+  }
+
+  /**
+   * Get user profile with follower/following/post counts
+   * @param {number} userId
+   * @returns {object} user profile data
+   */
+  async getProfile(userId) {
+    const { ctx } = this;
+
+    const user = await ctx.model.User.findByPk(userId, {
+      attributes: { exclude: ['password'] },
+      include: [
+        { model: ctx.model.Userprofile, as: 'profile' },
+      ],
+    });
+
+    if (!user) {
+      ctx.throw(404, 'User not found');
+    }
+
+    const [followersCount, followingsCount, postsCount] = await Promise.all([
+      ctx.model.UserFollow.count({ where: { followingId: userId } }),
+      ctx.model.UserFollow.count({ where: { followerId: userId } }),
+      ctx.model.Post.count({ where: { userId, is_valid: true } }),
+    ]);
+
+    const userData = user.toJSON();
+    return {
+      ...userData,
+      followersCount,
+      followingsCount,
+      postsCount,
+    };
+  }
+
+  /**
+   * Update user profile fields
+   * @param {number} userId
+   * @param {object} updates - { name, avatar, about_me, city }
+   * @returns {object} updated user data
+   */
+  async updateProfile(userId, updates) {
+    const { ctx, app } = this;
+    const maxNicknameLength = app.config.naobridge.maxNicknameLength;
+
+    const user = await ctx.model.User.findByPk(userId);
+    if (!user) {
+      ctx.throw(404, 'User not found');
+    }
+
+    if (updates.name !== undefined && updates.name.length > maxNicknameLength) {
+      ctx.throw(400, `Nickname must not exceed ${maxNicknameLength} characters`);
+    }
+
+    const userFields = {};
+    if (updates.name !== undefined) userFields.name = updates.name;
+    if (updates.avatar !== undefined) userFields.avatar = updates.avatar;
+
+    const profileFields = {};
+    if (updates.about_me !== undefined) profileFields.about_me = updates.about_me;
+    if (updates.city !== undefined) profileFields.city = updates.city;
+
+    const transaction = await ctx.model.transaction();
+    try {
+      if (Object.keys(userFields).length > 0) {
+        await ctx.model.User.update(userFields, {
+          where: { id: userId },
+          transaction,
+        });
+      }
+
+      if (Object.keys(profileFields).length > 0) {
+        await ctx.model.Userprofile.update(profileFields, {
+          where: { userId },
+          transaction,
+        });
+      }
+
+      await transaction.commit();
+    } catch (err) {
+      await transaction.rollback();
+      throw err;
+    }
+
+    return this.getProfile(userId);
+  }
+
+  /**
+   * Generate a JWT token for the given user
+   * @param {object} user - user model instance or plain object
+   * @returns {string} signed JWT
+   */
+  generateToken(user) {
+    const { app } = this;
+    const { secret, expiresIn } = app.config.jwt;
+
+    const payload = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      status: user.status,
+    };
+
+    return jwt.sign(payload, secret, { expiresIn });
+  }
+}
+
+module.exports = UserService;

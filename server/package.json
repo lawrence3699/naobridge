@@ -1,0 +1,41 @@
+{
+  "name": "naobridge-server",
+  "version": "1.0.0",
+  "description": "NaoBridge community server for brain injury patients",
+  "private": true,
+  "egg": {
+    "framework": "egg"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "egg": "^2.33.1",
+    "egg-redis": "^2.4.0",
+    "egg-scripts": "^2.17.0",
+    "egg-sequelize": "^6.0.0",
+    "egg-validate": "^2.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
+    "mysql2": "^3.6.0"
+  },
+  "devDependencies": {
+    "egg-bin": "^4.19.0",
+    "egg-mock": "^4.2.0",
+    "eslint": "^8.50.0",
+    "eslint-config-egg": "^12.2.1",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=naobridge-server --port=7001",
+    "stop": "egg-scripts stop --title=naobridge-server",
+    "dev": "egg-bin dev",
+    "debug": "egg-bin debug",
+    "test": "egg-bin test",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "lint": "eslint .",
+    "ci": "npm run lint && npm run cov"
+  }
+}
