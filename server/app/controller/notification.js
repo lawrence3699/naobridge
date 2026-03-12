@@ -13,8 +13,7 @@ class NotificationController extends Controller {
     const userId = ctx.state.user.id;
     const { page, page_size } = ctx.query;
 
-    const result = await ctx.service.notification.list({
-      userId,
+    const result = await ctx.service.notification.list(userId, {
       page: Number(page) || 1,
       pageSize: Number(page_size) || 20,
     });

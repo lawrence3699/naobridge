@@ -42,6 +42,11 @@ module.exports = app => {
       type: BOOLEAN,
       defaultValue: false,
     },
+    openid: {
+      type: STRING(128),
+      allowNull: true,
+      unique: true,
+    },
     is_active: {
       type: BOOLEAN,
       defaultValue: true,
@@ -51,6 +56,7 @@ module.exports = app => {
     timestamps: true,
     indexes: [
       { fields: ['status'] },
+      { fields: ['openid'], unique: true },
     ],
   });
 

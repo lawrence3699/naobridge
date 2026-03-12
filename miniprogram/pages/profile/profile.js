@@ -1,15 +1,15 @@
-const { userApi, contentApi } = require('../../utils/api');
+const { userApi } = require('../../utils/api');
 
 const ROLE_OPTIONS = [
   { value: 'patient', label: '患者本人', emoji: '💪' },
   { value: 'family', label: '家属', emoji: '🤝' },
-  { value: 'supporter', label: '关注者', emoji: '❤️' }
+  { value: 'supporter', label: '关注者', emoji: '❤️' },
 ];
 
 const ROLE_LABELS = {
   patient: '患者本人',
   family: '家属',
-  supporter: '关注者'
+  supporter: '关注者',
 };
 
 Page({
@@ -24,7 +24,7 @@ Page({
     selectedRole: '',
     agreedToRules: false,
     canSubmit: false,
-    roleOptions: ROLE_OPTIONS
+    roleOptions: ROLE_OPTIONS,
   },
 
   onLoad() {
@@ -40,7 +40,7 @@ Page({
   async checkLoginStatus() {
     this.setData({ loading: true });
 
-    const result = await userApi.login();
+    const result = await userApi.wxLogin();
 
     if (result.code === 0) {
       if (result.data.isNewUser) {
@@ -50,7 +50,7 @@ Page({
           isNewUser: false,
           userInfo: result.data.user,
           roleLabel: ROLE_LABELS[result.data.user.role] || '',
-          loading: false
+          loading: false,
         });
         getApp().globalData.userInfo = result.data.user;
         getApp().globalData.isLoggedIn = true;
@@ -66,7 +66,7 @@ Page({
     if (result.code === 0) {
       this.setData({
         userInfo: result.data,
-        roleLabel: ROLE_LABELS[result.data.role] || ''
+        roleLabel: ROLE_LABELS[result.data.role] || '',
       });
       getApp().globalData.userInfo = result.data;
     }
@@ -84,7 +84,7 @@ Page({
 
   onGoToRules() {
     wx.navigateTo({
-      url: '/pages/community-rules/community-rules?fromRegister=true'
+      url: '/pages/community-rules/community-rules?fromRegister=true',
     });
   },
 
@@ -97,7 +97,7 @@ Page({
   updateCanSubmit() {
     const { nickName, selectedRole, agreedToRules } = this.data;
     this.setData({
-      canSubmit: nickName.trim().length > 0 && selectedRole && agreedToRules
+      canSubmit: nickName.trim().length > 0 && selectedRole && agreedToRules,
     });
   },
 
@@ -109,23 +109,16 @@ Page({
       return;
     }
 
-    // Check nickname through sensitive filter
-    const checkResult = await contentApi.checkText(nickName.trim(), 'nickname');
-    if (checkResult.code === 1004) {
-      wx.showToast({ title: '昵称包含敏感词，请修改', icon: 'none' });
-      return;
-    }
-
     this.setData({ loading: true });
 
-    const result = await userApi.register(nickName.trim(), selectedRole, '');
+    const result = await userApi.wxRegister(nickName.trim(), selectedRole);
 
     if (result.code === 0) {
       this.setData({
         isNewUser: false,
         userInfo: result.data.user,
         roleLabel: ROLE_LABELS[selectedRole] || '',
-        loading: false
+        loading: false,
       });
       getApp().globalData.userInfo = result.data.user;
       getApp().globalData.isLoggedIn = true;
@@ -148,5 +141,5 @@ Page({
 
   onGoToAbout() {
     wx.navigateTo({ url: '/pages/about/about' });
-  }
+  },
 });

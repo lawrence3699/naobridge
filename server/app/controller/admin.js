@@ -3,7 +3,7 @@
 const { Controller } = require('egg');
 
 const REVIEW_RULES = {
-  status: { type: 'enum', values: ['PROCESSED', 'REFUSED'], required: true },
+  action: { type: 'enum', values: ['delete', 'dismiss'], required: true },
   result: { type: 'string', required: false },
 };
 
@@ -28,9 +28,9 @@ class AdminController extends Controller {
    */
   async stats() {
     const { ctx } = this;
-    await this._requireAdmin();
+    const adminId = ctx.state.user.id;
 
-    const result = await ctx.service.admin.stats();
+    const result = await ctx.service.admin.getStats(adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
@@ -42,39 +42,30 @@ class AdminController extends Controller {
    */
   async reviewReport() {
     const { ctx } = this;
-    await this._requireAdmin();
     ctx.validate(REVIEW_RULES, ctx.request.body);
 
     const adminId = ctx.state.user.id;
     const { reportId } = ctx.params;
+    const { action, result: resultNote } = ctx.request.body;
 
-    const result = await ctx.service.admin.reviewReport({
-      reportId,
-      adminId,
-      ...ctx.request.body,
-    });
+    const result = await ctx.service.admin.reviewReport(reportId, action, resultNote, adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
 
   /**
    * POST /api/v1/admin/users/:userId/mute
-   * Mute a user for a specified duration (in hours).
+   * Mute a user for a specified duration (in days).
    * Requires auth middleware + admin check.
    */
   async muteUser() {
     const { ctx } = this;
-    await this._requireAdmin();
     ctx.validate(MUTE_RULES, ctx.request.body);
 
     const adminId = ctx.state.user.id;
     const { userId } = ctx.params;
 
-    const result = await ctx.service.admin.muteUser({
-      userId,
-      adminId,
-      duration: ctx.request.body.duration,
-    });
+    const result = await ctx.service.admin.muteUser(userId, ctx.request.body.duration, adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
@@ -86,12 +77,10 @@ class AdminController extends Controller {
    */
   async banUser() {
     const { ctx } = this;
-    await this._requireAdmin();
-
     const adminId = ctx.state.user.id;
     const { userId } = ctx.params;
 
-    const result = await ctx.service.admin.banUser({ userId, adminId });
+    const result = await ctx.service.admin.banUser(userId, adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
@@ -103,12 +92,10 @@ class AdminController extends Controller {
    */
   async unmuteUser() {
     const { ctx } = this;
-    await this._requireAdmin();
-
     const adminId = ctx.state.user.id;
     const { userId } = ctx.params;
 
-    const result = await ctx.service.admin.unmuteUser({ userId, adminId });
+    const result = await ctx.service.admin.unmuteUser(userId, adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
@@ -120,10 +107,12 @@ class AdminController extends Controller {
    */
   async addWord() {
     const { ctx } = this;
-    await this._requireAdmin();
     ctx.validate(ADD_WORD_RULES, ctx.request.body);
 
-    const result = await ctx.service.admin.addWord(ctx.request.body);
+    const adminId = ctx.state.user.id;
+    const { word, category } = ctx.request.body;
+
+    const result = await ctx.service.admin.addWord(word, category, adminId);
 
     ctx.status = 201;
     ctx.body = { code: 0, msg: 'ok', data: result };
@@ -136,13 +125,12 @@ class AdminController extends Controller {
    */
   async removeWord() {
     const { ctx } = this;
-    await this._requireAdmin();
-
+    const adminId = ctx.state.user.id;
     const { wordId } = ctx.params;
 
-    const result = await ctx.service.admin.removeWord(wordId);
+    await ctx.service.admin.removeWord(wordId, adminId);
 
-    ctx.body = { code: 0, msg: 'ok', data: result };
+    ctx.body = { code: 0, msg: 'ok', data: null };
   }
 
   /**
@@ -152,15 +140,14 @@ class AdminController extends Controller {
    */
   async reportList() {
     const { ctx } = this;
-    await this._requireAdmin();
-
+    const adminId = ctx.state.user.id;
     const { status, page, page_size } = ctx.query;
 
     const result = await ctx.service.admin.reportList({
       status,
       page: Number(page) || 1,
       pageSize: Number(page_size) || 20,
-    });
+    }, adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
@@ -172,8 +159,7 @@ class AdminController extends Controller {
    */
   async contentList() {
     const { ctx } = this;
-    await this._requireAdmin();
-
+    const adminId = ctx.state.user.id;
     const { type, status, page, page_size } = ctx.query;
 
     const result = await ctx.service.admin.contentList({
@@ -181,25 +167,9 @@ class AdminController extends Controller {
       status,
       page: Number(page) || 1,
       pageSize: Number(page_size) || 20,
-    });
+    }, adminId);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
-  }
-
-  /**
-   * Verify that the current user has admin privileges.
-   * Throws 403 if the user is not an admin.
-   * @private
-   */
-  async _requireAdmin() {
-    const { ctx } = this;
-    const userId = ctx.state.user.id;
-
-    const admin = await ctx.model.Admin.findOne({ where: { userId } });
-
-    if (!admin) {
-      ctx.throw(403, '权限不足，需要管理员权限');
-    }
   }
 }
 

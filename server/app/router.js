@@ -16,6 +16,8 @@ module.exports = app => {
   // ─── Auth ──────────────────────────────────────────────
   router.post('/api/v1/register', controller.user.register);
   router.post('/api/v1/login', controller.user.login);
+  router.post('/api/v1/wx-login', controller.user.wxLogin);
+  router.post('/api/v1/wx-register', controller.user.wxRegister);
 
   // ─── User ──────────────────────────────────────────────
   router.get('/api/v1/user/me', auth, controller.user.me);

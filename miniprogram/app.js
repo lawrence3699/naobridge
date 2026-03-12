@@ -1,3 +1,5 @@
+const { userApi, getToken } = require('./utils/api');
+
 App({
   onLaunch() {
     if (!wx.cloud) {
@@ -6,12 +8,25 @@ App({
     }
 
     wx.cloud.init({
-      traceUser: true
+      env: this.globalData.cloudEnv,
+      traceUser: true,
     });
+
+    // Auto-login: check if user has a valid token
+    const token = getToken();
+    if (token) {
+      userApi.getProfile().then(res => {
+        if (res.code === 0) {
+          this.globalData.userInfo = res.data;
+          this.globalData.isLoggedIn = true;
+        }
+      });
+    }
   },
 
   globalData: {
     userInfo: null,
-    isLoggedIn: false
-  }
+    isLoggedIn: false,
+    cloudEnv: 'prod-4gp6g6tae6a348de',
+  },
 });

@@ -1,0 +1,54 @@
+.privacy-page {
+  padding: 32rpx;
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+.section {
+  margin-bottom: 40rpx;
+}
+
+.title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 12rpx;
+  line-height: 1.6;
+}
+
+.update-date {
+  display: block;
+  font-size: 28rpx;
+  color: #999999;
+  margin-bottom: 20rpx;
+}
+
+.heading {
+  display: block;
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 16rpx;
+  line-height: 1.6;
+}
+
+.body {
+  display: block;
+  font-size: 30rpx;
+  color: #555555;
+  line-height: 1.8;
+  margin-bottom: 8rpx;
+}
+
+.disclaimer {
+  background-color: #FFF8E1;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #FFA000;
+}
+
+.disclaimer-text {
+  color: #E65100;
+  font-weight: 500;
+}

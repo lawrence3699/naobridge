@@ -14,6 +14,16 @@ const LOGIN_RULES = {
   password: { type: 'string', required: true },
 };
 
+const WX_LOGIN_RULES = {
+  code: { type: 'string', required: true },
+};
+
+const WX_REGISTER_RULES = {
+  code: { type: 'string', required: true },
+  name: { type: 'string', required: true, trim: true },
+  role: { type: 'enum', values: ['patient', 'family', 'supporter'], required: false },
+};
+
 class UserController extends Controller {
   /**
    * POST /api/v1/register
@@ -80,6 +90,33 @@ class UserController extends Controller {
 
     const result = await ctx.service.user.updateProfile(userId, ctx.request.body);
 
+    ctx.body = { code: 0, msg: 'ok', data: result };
+  }
+
+  /**
+   * POST /api/v1/wx-login
+   * WeChat login: exchange code for user or isNewUser flag.
+   */
+  async wxLogin() {
+    const { ctx } = this;
+    ctx.validate(WX_LOGIN_RULES, ctx.request.body);
+
+    const result = await ctx.service.user.wxLogin(ctx.request.body.code);
+
+    ctx.body = { code: 0, msg: 'ok', data: result };
+  }
+
+  /**
+   * POST /api/v1/wx-register
+   * WeChat register: create user with openid from code.
+   */
+  async wxRegister() {
+    const { ctx } = this;
+    ctx.validate(WX_REGISTER_RULES, ctx.request.body);
+
+    const result = await ctx.service.user.wxRegister(ctx.request.body);
+
+    ctx.status = 201;
     ctx.body = { code: 0, msg: 'ok', data: result };
   }
 

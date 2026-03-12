@@ -1,0 +1,14 @@
+node_modules
+test
+coverage
+.git
+miniprogram
+cloudfunctions
+admin
+docs
+*.md
+.eslintrc
+.eslintignore
+logs
+run
+typings

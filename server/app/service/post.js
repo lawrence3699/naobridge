@@ -37,6 +37,12 @@ class PostService extends Service {
 
     await this._checkSensitiveWords(`${title} ${content}`);
 
+    // WeChat content security check (graceful degradation)
+    const wxResult = await ctx.service.wechat.checkTextSecurity(`${title} ${content}`);
+    if (!wxResult.safe) {
+      ctx.throw(400, 'Content failed WeChat security check');
+    }
+
     const transaction = await ctx.model.transaction();
     try {
       const post = await ctx.model.Post.create({
@@ -272,7 +278,7 @@ class PostService extends Service {
     if (existing) {
       await existing.destroy();
       await ctx.model.Post.update(
-        { num_likes: this.app.Sequelize.literal('GREATEST(num_likes - 1, 0)') },
+        { num_likes: ctx.helper.safeDecrement('num_likes', 1) },
         { where: { id: postId } }
       );
       const updated = await ctx.model.Post.findByPk(postId);

@@ -3,6 +3,7 @@
 const { Service } = require('egg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { createFilter, filterText } = require('../extend/filter');
 
 const VALID_ROLES = ['patient', 'family', 'supporter'];
 const SALT_ROUNDS = 10;
@@ -176,6 +177,129 @@ class UserService extends Service {
     }
 
     return this.getProfile(userId);
+  }
+
+  /**
+   * Toggle follow/unfollow on a user
+   * @param {number} followerId - current user id
+   * @param {number} followingId - user id to follow/unfollow
+   * @returns {{ followed: boolean }}
+   */
+  async follow(followerId, followingId) {
+    const { ctx } = this;
+
+    if (String(followerId) === String(followingId)) {
+      ctx.throw(400, 'You cannot follow yourself');
+    }
+
+    const target = await ctx.model.User.findByPk(followingId);
+    if (!target) {
+      ctx.throw(404, 'User not found');
+    }
+
+    const existing = await ctx.model.UserFollow.findOne({
+      where: { followerId, followingId },
+    });
+
+    if (existing) {
+      await existing.destroy();
+      return { followed: false };
+    }
+
+    await ctx.model.UserFollow.create({ followerId, followingId });
+    return { followed: true };
+  }
+
+  /**
+   * WeChat login: exchange code for openid, look up user
+   * @param {string} code - wx.login temporary code
+   * @returns {{ isNewUser: boolean, user?: object, token?: string }}
+   */
+  async wxLogin(code) {
+    const { ctx } = this;
+
+    const { openid } = await ctx.service.wechat.code2Session(code);
+
+    const user = await ctx.model.User.findOne({ where: { openid } });
+
+    if (!user) {
+      return { isNewUser: true };
+    }
+
+    if (user.status === 'banned') {
+      ctx.throw(403, 'Account has been banned');
+    }
+
+    const token = this.generateToken(user);
+    const userData = user.toJSON();
+    delete userData.password;
+
+    return { isNewUser: false, user: userData, token };
+  }
+
+  /**
+   * WeChat register: create user with openid
+   * @param {object} params - { code, name, role }
+   * @returns {{ user: object, token: string }}
+   */
+  async wxRegister({ code, name, role }) {
+    const { ctx } = this;
+
+    if (!name) {
+      ctx.throw(400, 'name is required');
+    }
+
+    if (role && !VALID_ROLES.includes(role)) {
+      ctx.throw(400, `role must be one of: ${VALID_ROLES.join(', ')}`);
+    }
+
+    // Check sensitive words in nickname
+    const wordRecords = await ctx.model.SensitiveWord.findAll();
+    const words = wordRecords.map(r => r.word);
+    if (words.length > 0) {
+      const filter = createFilter(words);
+      const result = filterText(filter, name);
+      if (!result.safe) {
+        ctx.throw(400, `Content contains prohibited words: ${result.keywords.join(', ')}`);
+      }
+    }
+
+    const { openid } = await ctx.service.wechat.code2Session(code);
+
+    const existing = await ctx.model.User.findOne({ where: { openid } });
+    if (existing) {
+      ctx.throw(409, 'Account already exists for this WeChat user');
+    }
+
+    // Generate placeholder email and password for openid-based users
+    const email = `wx_${openid}@wechat.local`;
+    const hashedPassword = await bcrypt.hash(`wx_${openid}_${Date.now()}`, SALT_ROUNDS);
+
+    const transaction = await ctx.model.transaction();
+    try {
+      const user = await ctx.model.User.create({
+        name,
+        email,
+        password: hashedPassword,
+        openid,
+        role: role || 'supporter',
+      }, { transaction });
+
+      await ctx.model.Userprofile.create({
+        userId: user.id,
+      }, { transaction });
+
+      await transaction.commit();
+
+      const token = this.generateToken(user);
+      const userData = user.toJSON();
+      delete userData.password;
+
+      return { user: userData, token };
+    } catch (err) {
+      await transaction.rollback();
+      throw err;
+    }
   }
 
   /**

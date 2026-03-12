@@ -22,3 +22,10 @@ Thumbs.db
 
 # Build artifacts
 *.log
+
+# Egg.js runtime
+server/run/
+server/logs/
+
+# Private config
+project.private.config.json

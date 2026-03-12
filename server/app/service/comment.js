@@ -34,6 +34,12 @@ class CommentService extends Service {
     // Run sensitive word filter
     await this._checkSensitiveWords(content);
 
+    // WeChat content security check (graceful degradation)
+    const wxResult = await ctx.service.wechat.checkTextSecurity(content);
+    if (!wxResult.safe) {
+      ctx.throw(400, 'Content failed WeChat security check');
+    }
+
     // If postCommentId provided, verify parent comment exists and belongs to same post
     if (postCommentId) {
       const parent = await ctx.model.PostComment.findByPk(postCommentId);
@@ -157,7 +163,7 @@ class CommentService extends Service {
 
     // Decrement post comment count
     await ctx.model.Post.update(
-      { num_comments: this.app.Sequelize.literal(`GREATEST(num_comments - ${deleteCount}, 0)`) },
+      { num_comments: ctx.helper.safeDecrement('num_comments', deleteCount) },
       { where: { id: postId } }
     );
   }

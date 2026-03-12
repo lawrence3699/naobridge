@@ -22,6 +22,7 @@
     "egg-mock": "^4.2.0",
     "eslint": "^8.50.0",
     "eslint-config-egg": "^12.2.1",
+    "sqlite3": "^5.1.7",
     "supertest": "^6.3.3"
   },
   "engines": {
@@ -29,6 +30,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --title=naobridge-server --port=7001",
+    "docker-start": "egg-scripts start --title=naobridge-server --port=7001",
     "stop": "egg-scripts stop --title=naobridge-server",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",

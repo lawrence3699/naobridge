@@ -1,4 +1,4 @@
-const { postApi, callFunction } = require('../../utils/api');
+const { postApi, commentApi } = require('../../utils/api');
 const { formatTimeAgo, formatDate } = require('../../utils/time');
 
 const CATEGORY_LABELS = {
@@ -7,7 +7,7 @@ const CATEGORY_LABELS = {
   emotional: '情感互助',
   knowledge: '知识科普',
   qa: '求助问答',
-  free: '自由话题'
+  free: '自由话题',
 };
 
 Page({
@@ -20,14 +20,13 @@ Page({
     commentText: '',
     replyTo: '',
     replyToId: '',
-    loading: true
+    loading: true,
   },
 
   onLoad(options) {
     this.postId = options.id;
     if (this.postId) {
       this.loadPostDetail();
-      this.loadComments();
     }
   },
 
@@ -39,33 +38,30 @@ Page({
     if (result.code === 0) {
       const app = getApp();
       const currentUser = app.globalData.userInfo;
-      const isAuthor = currentUser && result.data.authorId === currentUser._openid;
+      const post = result.data.post;
+      const isAuthor = currentUser && post.userId === currentUser.id;
+
+      // Comments are returned with the post detail
+      const comments = (result.data.comments || []).map(c => ({
+        ...c,
+        timeAgo: formatTimeAgo(c.createdAt),
+        replies: (c.replies || []).map(r => ({
+          ...r,
+          timeAgo: formatTimeAgo(r.createdAt),
+        })),
+      }));
 
       this.setData({
-        post: result.data,
-        postDate: formatDate(result.data.createdAt),
-        categoryLabel: CATEGORY_LABELS[result.data.category] || '',
+        post,
+        postDate: formatDate(post.createdAt),
+        categoryLabel: CATEGORY_LABELS[post.category] || '',
         isAuthor,
-        loading: false
+        comments,
+        loading: false,
       });
     } else {
       this.setData({ loading: false });
       wx.showToast({ title: result.message || '加载失败', icon: 'none' });
-    }
-  },
-
-  async loadComments() {
-    const result = await callFunction('comment', {
-      action: 'list',
-      postId: this.postId
-    });
-
-    if (result.code === 0) {
-      const comments = result.data.comments.map(c => ({
-        ...c,
-        timeAgo: formatTimeAgo(c.createdAt)
-      }));
-      this.setData({ comments });
     }
   },
 
@@ -84,17 +80,17 @@ Page({
       return;
     }
 
-    const result = await callFunction('comment', {
-      action: 'create',
-      postId: this.postId,
-      content: commentText.trim(),
-      parentId: replyToId || undefined
-    });
+    let result;
+    if (replyToId) {
+      result = await commentApi.reply(this.postId, replyToId, commentText.trim());
+    } else {
+      result = await commentApi.create(this.postId, commentText.trim());
+    }
 
     if (result.code === 0) {
       this.setData({ commentText: '', replyTo: '', replyToId: '' });
       wx.showToast({ title: '评论成功', icon: 'none' });
-      this.loadComments();
+      this.loadPostDetail();
     } else {
       wx.showToast({ title: result.message || '评论失败', icon: 'none' });
     }
@@ -115,7 +111,7 @@ Page({
       title: '确认删除',
       content: '删除后不可恢复，确定要删除这篇帖子吗？',
       confirmText: '删除',
-      confirmColor: '#FF4444'
+      confirmColor: '#FF4444',
     });
 
     if (!confirm) return;
@@ -132,9 +128,10 @@ Page({
 
   onPreviewImage(e) {
     const url = e.currentTarget.dataset.url;
+    const images = (this.data.post.images || []).map(img => img.url || img);
     wx.previewImage({
       current: url,
-      urls: this.data.post.images
+      urls: images,
     });
-  }
+  },
 });

@@ -117,11 +117,7 @@ class PostController extends Controller {
     const userId = ctx.state.user.id;
     const { postId } = ctx.params;
 
-    const result = await ctx.service.post.update({
-      postId,
-      userId,
-      ...ctx.request.body,
-    });
+    const result = await ctx.service.post.update(postId, userId, ctx.request.body);
 
     ctx.body = { code: 0, msg: 'ok', data: result };
   }

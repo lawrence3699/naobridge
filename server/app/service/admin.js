@@ -123,7 +123,7 @@ class AdminService extends Service {
         const { postId } = comment;
         await comment.destroy();
         await ctx.model.Post.update(
-          { num_comments: this.app.Sequelize.literal('GREATEST(num_comments - 1, 0)') },
+          { num_comments: ctx.helper.safeDecrement('num_comments', 1) },
           { where: { id: postId } }
         );
       }

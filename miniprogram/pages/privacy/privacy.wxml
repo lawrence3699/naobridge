@@ -1,0 +1,58 @@
+<view class="privacy-page">
+  <view class="section">
+    <text class="title">脑桥（NaoBridge）隐私政策</text>
+    <text class="update-date">最后更新日期：2026年3月12日</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">一、我们收集的信息</text>
+    <text class="body">1. 微信昵称（或您自定义的昵称）</text>
+    <text class="body">2. 您选择的身份角色（患者/家属/关注者）</text>
+    <text class="body">3. 微信 OpenID（用于身份识别，不包含您的微信号）</text>
+    <text class="body">4. 您在平台发布的内容（帖子、评论）</text>
+    <text class="body">5. 您上传的图片</text>
+    <text class="body">我们不会收集您的手机号、通讯录、位置信息或其他敏感个人信息。</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">二、信息使用方式</text>
+    <text class="body">1. 提供社区服务：展示您的帖子和评论</text>
+    <text class="body">2. 身份识别：确保您的账户安全</text>
+    <text class="body">3. 内容安全：检查发布内容是否合规</text>
+    <text class="body">4. 服务改进：分析使用情况以优化产品体验</text>
+    <text class="body">我们不会将您的个人信息出售给第三方。</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">三、信息存储与保护</text>
+    <text class="body">您的数据存储在微信云托管的安全服务器中，采用加密传输和存储。我们将采取合理的技术和管理措施保护您的个人信息安全。</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">四、信息保留期限</text>
+    <text class="body">在您使用本服务期间，我们会保留您的账户信息和发布内容。如果您停止使用本服务，我们将在合理期限内删除或匿名化您的个人信息。</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">五、您的权利</text>
+    <text class="body">1. 查看和修改个人资料</text>
+    <text class="body">2. 删除自己发布的帖子和评论</text>
+    <text class="body">3. 申请删除账户及相关数据</text>
+    <text class="body">如需行使上述权利，请通过社区管理员联系我们。</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">六、未成年人保护</text>
+    <text class="body">本平台主要面向成年用户。如果您是未满18周岁的未成年人，请在法定监护人的陪同下使用本服务。</text>
+  </view>
+
+  <view class="section disclaimer">
+    <text class="heading">免责声明</text>
+    <text class="body disclaimer-text">本平台不提供医疗建议，内容仅供交流参考。如有医疗需求，请咨询专业医疗机构。用户发布的内容仅代表其个人观点，不代表平台立场。</text>
+  </view>
+
+  <view class="section">
+    <text class="heading">七、联系我们</text>
+    <text class="body">如果您对本隐私政策有任何疑问，请通过社区管理功能联系我们。</text>
+  </view>
+</view>

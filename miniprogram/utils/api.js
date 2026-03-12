@@ -1,8 +1,12 @@
 /**
- * API utility — HTTP requests to NaoBridge Egg.js backend
+ * API utility — calls NaoBridge Egg.js backend via WeChat Cloud Hosting
+ *
+ * Uses wx.cloud.callContainer() instead of wx.request().
+ * No domain, ICP filing, or HTTPS certificate required.
  */
 
-const BASE_URL = 'http://8.141.95.103/api/v1';
+// Cloud Hosting service name (configured in WeChat Cloud Hosting console)
+const SERVICE_NAME = 'koa-ocjx';
 
 /**
  * Get stored auth token
@@ -26,7 +30,7 @@ function clearToken() {
 }
 
 /**
- * HTTP request with unified error handling
+ * HTTP request via Cloud Hosting container
  * @param {string} method - GET/POST/PUT/DELETE
  * @param {string} path - API path (e.g., /posts)
  * @param {object} data - request body or query params
@@ -35,16 +39,22 @@ function clearToken() {
 function request(method, path, data) {
   return new Promise((resolve) => {
     const token = getToken();
-    const header = { 'Content-Type': 'application/json' };
+    const header = {
+      'X-WX-SERVICE': SERVICE_NAME,
+      'Content-Type': 'application/json',
+    };
     if (token) {
       header.Authorization = `Bearer ${token}`;
     }
 
-    wx.request({
-      url: `${BASE_URL}${path}`,
+    wx.cloud.callContainer({
+      config: {
+        env: getApp().globalData.cloudEnv,
+      },
+      path: `/api/v1${path}`,
       method,
-      data,
       header,
+      data,
       success(res) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data);
@@ -54,7 +64,7 @@ function request(method, path, data) {
           resolve({
             code: res.data?.code || 2001,
             data: null,
-            msg: res.data?.msg || res.data?.message || '请求失败'
+            msg: res.data?.msg || res.data?.message || '请求失败',
           });
         }
       },
@@ -63,9 +73,9 @@ function request(method, path, data) {
         resolve({
           code: 2001,
           data: null,
-          msg: '网络请求失败，请检查网络后重试'
+          msg: '网络请求失败，请检查网络后重试',
         });
-      }
+      },
     });
   });
 }
@@ -74,9 +84,68 @@ function request(method, path, data) {
  * User API
  */
 const userApi = {
+  /**
+   * WeChat login: exchange wx.login code for session
+   * @returns {Promise} { isNewUser, user?, token? }
+   */
+  wxLogin() {
+    return new Promise((resolve, reject) => {
+      wx.login({
+        success(loginRes) {
+          if (!loginRes.code) {
+            resolve({ code: 2001, data: null, msg: '微信登录失败' });
+            return;
+          }
+          request('POST', '/wx-login', { code: loginRes.code }).then(res => {
+            if (res.code === 0 && res.data?.token) {
+              setToken(res.data.token);
+            }
+            resolve(res);
+          });
+        },
+        fail() {
+          resolve({ code: 2001, data: null, msg: '微信登录失败' });
+        },
+      });
+    });
+  },
+
+  /**
+   * WeChat register: create account with openid
+   * @param {string} name - user nickname
+   * @param {string} role - patient/family/supporter
+   * @returns {Promise}
+   */
+  wxRegister(name, role) {
+    return new Promise((resolve) => {
+      wx.login({
+        success(loginRes) {
+          if (!loginRes.code) {
+            resolve({ code: 2001, data: null, msg: '微信登录失败' });
+            return;
+          }
+          request('POST', '/wx-register', {
+            code: loginRes.code,
+            name,
+            role: role || 'supporter',
+          }).then(res => {
+            if (res.code === 0 && res.data?.token) {
+              setToken(res.data.token);
+            }
+            resolve(res);
+          });
+        },
+        fail() {
+          resolve({ code: 2001, data: null, msg: '微信登录失败' });
+        },
+      });
+    });
+  },
+
+  // Keep email-based auth for admin panel backwards compatibility
   register(name, role, email, password, avatarUrl) {
     return request('POST', '/register', {
-      name, role, email, password, avatar: avatarUrl
+      name, role, email, password, avatar: avatarUrl,
     }).then(res => {
       if (res.code === 0 && res.data?.token) {
         setToken(res.data.token);
@@ -112,7 +181,7 @@ const userApi = {
 
   logout() {
     clearToken();
-  }
+  },
 };
 
 /**
@@ -163,9 +232,9 @@ const postApi = {
       targetType: 'post',
       targetId: postId,
       reason,
-      description
+      description,
     });
-  }
+  },
 };
 
 /**
@@ -186,7 +255,7 @@ const commentApi = {
 
   delete(postId, commentId) {
     return request('DELETE', `/posts/${postId}/comments/${commentId}`);
-  }
+  },
 };
 
 /**
@@ -194,17 +263,14 @@ const commentApi = {
  */
 const reportApi = {
   create(targetType, targetId, reason, description) {
-    // Reports go through the post report endpoint for posts
-    // For comments/users, use the generic structure
     return request('POST', `/posts/${targetId}/report`, {
-      targetType, targetId, reason, description
+      targetType, targetId, reason, description,
     });
   },
 
   getMyReports() {
-    // Not yet implemented as separate endpoint
     return Promise.resolve({ code: 0, data: { reports: [] }, msg: 'ok' });
-  }
+  },
 };
 
 /**
@@ -228,7 +294,7 @@ const notificationApi = {
 
   getUnreadCount() {
     return request('GET', '/notifications/unread-count');
-  }
+  },
 };
 
 /**
@@ -277,7 +343,7 @@ const adminApi = {
     if (page) params.page = page;
     if (pageSize) params.page_size = pageSize;
     return request('GET', '/admin/content', params);
-  }
+  },
 };
 
 module.exports = {
@@ -290,5 +356,5 @@ module.exports = {
   commentApi,
   reportApi,
   notificationApi,
-  adminApi
+  adminApi,
 };

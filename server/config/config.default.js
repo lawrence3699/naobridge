@@ -40,6 +40,12 @@ module.exports = appInfo => {
     },
   };
 
+  // WeChat Mini Program (dev defaults)
+  config.wechat = {
+    appId: process.env.WX_APPID || '',
+    appSecret: process.env.WX_APPSECRET || '',
+  };
+
   // NaoBridge specific
   config.naobridge = {
     maxPostsPerDay: 10,
