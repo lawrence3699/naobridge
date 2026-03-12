@@ -1,88 +1,112 @@
-/* Home Page Styles */
+/* Home Page — Card-based forum layout, light blue theme */
+
 .page-container {
-  padding-bottom: 140rpx;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #F2F1F6;
 }
 
-/* Category Tabs */
+/* Category tab bar */
 .tab-bar {
   display: flex;
   white-space: nowrap;
-  background-color: #FFFFFF;
-  padding: 16rpx 8rpx;
-  border-bottom: 1rpx solid #EEEEEE;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  background-color: #fff;
+  padding: 16rpx 12rpx;
+  border-bottom: 1rpx solid #EFEFEF;
+  flex-shrink: 0;
 }
 
 .tab-item {
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
-  padding: 12rpx 24rpx;
-  margin: 0 8rpx;
-  border-radius: 12rpx;
-  min-width: 44px;
-  min-height: 44px;
   justify-content: center;
+  padding: 10rpx 28rpx;
+  margin: 0 8rpx;
+  border-radius: 28rpx;
+  font-size: 13px;
+  color: #666;
+  background-color: #F2F1F6;
+  transition: all 0.2s;
 }
 
 .tab-active {
-  background-color: #E8F0F8;
-  border: 2rpx solid #2C5F8A;
-}
-
-.tab-emoji {
-  font-size: 20px;
-}
-
-.tab-label {
-  font-size: 14px;
-  color: #333333;
-  margin-top: 4rpx;
-}
-
-.tab-active .tab-label {
-  color: #2C5F8A;
+  background-color: #4A90D9;
+  color: #fff;
   font-weight: bold;
 }
 
-/* Post Cards */
-.post-list {
-  padding: 8rpx 16rpx;
+/* Post scroll area */
+.post-scroll {
+  flex: 1;
+  height: 0;
 }
 
+/* Post card */
 .post-card {
+  margin-bottom: 10rpx;
+  padding: 24rpx 28rpx;
+}
+
+/* Card header */
+.card-header {
+  display: flex;
+  align-items: center;
   margin-bottom: 16rpx;
 }
 
-.post-header {
+.avatar {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  background-color: #F2F1F6;
+  flex-shrink: 0;
+}
+
+.header-info {
+  flex: 1;
+  margin-left: 16rpx;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8rpx;
+  flex-direction: column;
 }
 
-.post-author {
+.author-name {
   font-size: 14px;
-  color: #666666;
+  color: #444;
+  font-weight: 500;
 }
 
-.post-category-tag {
-  font-size: 12px;
-  color: #2C5F8A;
-  background-color: #E8F0F8;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
+.post-time {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2rpx;
+}
+
+.category-tag {
+  font-size: 11px;
+  color: #4A90D9;
+  background-color: #EBF2FB;
+  padding: 4rpx 14rpx;
+  border-radius: 6rpx;
+  flex-shrink: 0;
+}
+
+/* Card body */
+.card-body {
+  padding: 0;
 }
 
 .post-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
   margin-bottom: 8rpx;
+  line-height: 1.5;
 }
 
-.post-preview {
-  font-size: 15px;
-  color: #4A4A4A;
+.post-content {
+  font-size: 14px;
+  color: #555;
   line-height: 1.6;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -90,99 +114,112 @@
   overflow: hidden;
 }
 
-/* Image preview */
-.post-images {
+/* Image grid */
+.image-grid {
   display: flex;
   gap: 8rpx;
-  margin-top: 12rpx;
+  margin-top: 16rpx;
 }
 
-.post-thumb {
+.grid-image {
   width: 200rpx;
   height: 200rpx;
   border-radius: 8rpx;
-  background-color: #F0F0F0;
+  background-color: #F2F1F6;
+}
+
+.image-count-1 .grid-image {
+  width: 400rpx;
+  height: 300rpx;
 }
 
 .more-images {
   width: 200rpx;
   height: 200rpx;
   border-radius: 8rpx;
-  background-color: #F0F0F0;
+  background-color: #F2F1F6;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: #999999;
+  font-size: 14px;
+  color: #888;
 }
 
-/* Post footer */
-.post-footer {
+/* Card footer buttons */
+.card-buttons {
   display: flex;
-  gap: 24rpx;
-  margin-top: 16rpx;
   align-items: center;
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F2F1F6;
+  gap: 40rpx;
 }
 
-.post-stat {
-  font-size: 13px;
-  color: #999999;
+.btn-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
 }
 
-.post-time {
-  font-size: 13px;
-  color: #999999;
-  margin-left: auto;
+.btn-icon {
+  font-size: 14px;
+}
+
+.btn-text {
+  font-size: 12px;
+  color: #888;
 }
 
 /* States */
-.empty-state, .loading-state {
-  padding: 80rpx 0;
+.empty-state {
+  padding: 120rpx 0;
   text-align: center;
 }
 
-.empty-text, .loading-text {
-  font-size: 16px;
-  color: #999999;
+.empty-text {
+  font-size: 14px;
+  color: #888;
 }
 
-.load-more {
+.loading-state {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.loading-text {
+  font-size: 13px;
+  color: #888;
+}
+
+.no-more {
   padding: 32rpx 0;
   text-align: center;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.load-more-text {
-  font-size: 14px;
-  color: #2C5F8A;
+.no-more-text {
+  font-size: 12px;
+  color: #bbb;
 }
 
 /* FAB */
 .fab-button {
   position: fixed;
-  right: 32rpx;
-  bottom: 160rpx;
-  width: 100rpx;
-  height: 100rpx;
-  background-color: #2C5F8A;
+  right: 40rpx;
+  bottom: 180rpx;
+  width: 96rpx;
+  height: 96rpx;
+  background-color: #4A90D9;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4rpx 16rpx rgba(44, 95, 138, 0.4);
+  box-shadow: 0 6rpx 20rpx rgba(74, 144, 217, 0.4);
   z-index: 100;
 }
 
 .fab-icon {
-  font-size: 36px;
-  color: #FFFFFF;
+  font-size: 32px;
+  color: #fff;
   line-height: 1;
-}
-
-.footer-disclaimer {
-  margin-top: 32rpx;
-  margin-bottom: 32rpx;
+  margin-top: -4rpx;
 }

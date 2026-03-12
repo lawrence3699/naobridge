@@ -12,14 +12,14 @@
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#2C5F8A",
+    "navigationBarBackgroundColor": "#4A90D9",
     "navigationBarTitleText": "脑桥",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F5F5"
+    "backgroundColor": "#F2F1F6"
   },
   "tabBar": {
-    "color": "#666666",
-    "selectedColor": "#2C5F8A",
+    "color": "#888888",
+    "selectedColor": "#4A90D9",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [

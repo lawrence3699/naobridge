@@ -1,12 +1,11 @@
 const { postApi } = require('../../utils/api');
 
 const CATEGORIES = [
-  { value: 'recovery', label: '康复日记', emoji: '💬' },
-  { value: 'bci', label: '脑机接口讨论', emoji: '🔬' },
-  { value: 'emotional', label: '情感互助', emoji: '❤️' },
-  { value: 'knowledge', label: '知识科普', emoji: '📚' },
-  { value: 'qa', label: '求助问答', emoji: '❓' },
-  { value: 'free', label: '自由话题', emoji: '🗣️' }
+  { value: 'recovery', label: '康复日记' },
+  { value: 'bci', label: '脑机接口讨论' },
+  { value: 'knowledge', label: '知识科普' },
+  { value: 'qa', label: '求助问答' },
+  { value: 'free', label: '自由话题' },
 ];
 
 Page({
@@ -17,7 +16,7 @@ Page({
     images: [],
     categories: CATEGORIES,
     canSubmit: false,
-    submitting: false
+    submitting: false,
   },
 
   onTitleInput(e) {
@@ -38,7 +37,7 @@ Page({
   updateCanSubmit() {
     const { title, content, selectedCategory } = this.data;
     this.setData({
-      canSubmit: title.trim().length > 0 && content.trim().length >= 10 && selectedCategory
+      canSubmit: title.trim().length > 0 && content.trim().length >= 10 && selectedCategory,
     });
   },
 
@@ -54,7 +53,7 @@ Page({
       success: (res) => {
         const newPaths = res.tempFiles.map(f => f.tempFilePath);
         this.setData({ images: [...this.data.images, ...newPaths] });
-      }
+      },
     });
   },
 
@@ -125,5 +124,5 @@ Page({
 
     const results = await Promise.all(uploadTasks);
     return results.map(r => r.fileID);
-  }
+  },
 });

@@ -1,10 +1,10 @@
 <!-- Profile / Personal Center Page -->
-<view class="page-container">
+<view class="profile-page">
   <!-- Registration flow (new user) -->
   <block wx:if="{{isNewUser}}">
-    <view class="heading-1 page-title">完善个人资料</view>
+    <view class="reg-title">完善个人资料</view>
 
-    <view class="card">
+    <view class="reg-card">
       <view class="form-group">
         <view class="form-label">昵称</view>
         <input
@@ -27,22 +27,22 @@
             data-role="{{item.value}}"
           >
             <text class="role-emoji">{{item.emoji}}</text>
-            <text class="role-label">{{item.label}}</text>
+            <text class="role-text">{{item.label}}</text>
           </view>
         </view>
       </view>
 
       <view class="form-group">
-        <view class="rules-check" bindtap="onGoToRules">
-          <view class="checkbox {{agreedToRules ? 'checkbox-checked' : ''}}">
+        <view class="rules-row" bindtap="onGoToRules">
+          <view class="check-box {{agreedToRules ? 'checked' : ''}}">
             <text wx:if="{{agreedToRules}}">✓</text>
           </view>
-          <text class="rules-text">我已阅读并同意《社区公约》</text>
+          <text class="rules-link">我已阅读并同意《社区公约》</text>
         </view>
       </view>
 
       <button
-        class="btn-primary submit-btn"
+        class="submit-btn"
         bindtap="onSubmitRegister"
         disabled="{{!canSubmit}}"
       >
@@ -53,40 +53,40 @@
 
   <!-- Profile view (existing user) -->
   <block wx:else>
-    <view class="profile-header card">
+    <view class="profile-card">
       <image
         class="avatar"
         src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}"
         mode="aspectFill"
       />
-      <view class="profile-info">
-        <view class="heading-2">{{userInfo.nickName}}</view>
+      <view class="user-info">
+        <view class="user-name">{{userInfo.nickName}}</view>
         <view class="role-badge">{{roleLabel}}</view>
       </view>
     </view>
 
-    <view class="card menu-list">
+    <view class="menu-card">
       <view class="menu-item" bindtap="onEditProfile">
-        <text class="menu-text">编辑资料</text>
-        <text class="menu-arrow">></text>
+        <text class="menu-label">编辑资料</text>
+        <text class="menu-arrow">›</text>
       </view>
       <view class="menu-item" bindtap="onGoToRulesView">
-        <text class="menu-text">社区公约</text>
-        <text class="menu-arrow">></text>
+        <text class="menu-label">社区公约</text>
+        <text class="menu-arrow">›</text>
       </view>
-      <view class="menu-item" bindtap="onGoToAbout">
-        <text class="menu-text">关于脑桥</text>
-        <text class="menu-arrow">></text>
+      <view class="menu-item menu-item-last" bindtap="onGoToAbout">
+        <text class="menu-label">关于脑桥</text>
+        <text class="menu-arrow">›</text>
       </view>
     </view>
 
-    <view class="disclaimer">
+    <view class="disclaimer-bar">
       本平台不提供医疗建议，内容仅供交流参考
     </view>
   </block>
 
   <!-- Loading state -->
-  <view wx:if="{{loading}}" class="loading-overlay">
-    <text class="loading-text">加载中...</text>
+  <view wx:if="{{loading}}" class="loading-mask">
+    <text class="loading-label">加载中...</text>
   </view>
 </view>

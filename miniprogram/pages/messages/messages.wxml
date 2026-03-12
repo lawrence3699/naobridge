@@ -1,31 +1,31 @@
 <!-- Messages / Notification Center Page -->
-<view class="page-container">
-  <view class="heading-1 page-title">消息中心</view>
+<view class="msg-page">
+  <view class="page-header">消息中心</view>
 
   <block wx:if="{{messages.length > 0}}">
     <view
       wx:for="{{messages}}"
       wx:key="_id"
-      class="card message-card {{!item.isRead ? 'unread' : ''}}"
+      class="msg-card {{!item.isRead ? 'msg-unread' : ''}}"
       bindtap="onOpenMessage"
       data-id="{{item._id}}"
       data-related="{{item.relatedId}}"
       data-type="{{item.type}}"
     >
-      <view class="message-header">
-        <text class="message-type-tag">{{item.typeLabel}}</text>
-        <text class="message-time">{{item.timeAgo}}</text>
+      <view class="msg-top">
+        <text class="msg-tag">{{item.typeLabel}}</text>
+        <text class="msg-time">{{item.timeAgo}}</text>
       </view>
-      <view class="message-title">{{item.title}}</view>
-      <view class="message-content">{{item.content}}</view>
+      <view class="msg-title">{{item.title}}</view>
+      <view class="msg-preview">{{item.content}}</view>
     </view>
   </block>
 
-  <view wx:if="{{!loading && messages.length === 0}}" class="empty-state">
-    <text class="empty-text">暂无消息</text>
+  <view wx:if="{{!loading && messages.length === 0}}" class="msg-empty">
+    <text class="msg-empty-text">暂无消息</text>
   </view>
 
-  <view wx:if="{{loading}}" class="loading-state">
-    <text class="loading-text">加载中...</text>
+  <view wx:if="{{loading}}" class="msg-loading">
+    <text class="msg-loading-text">加载中...</text>
   </view>
 </view>

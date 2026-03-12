@@ -4,7 +4,6 @@ const { formatTimeAgo, formatDate } = require('../../utils/time');
 const CATEGORY_LABELS = {
   recovery: '康复日记',
   bci: '脑机接口',
-  emotional: '情感互助',
   knowledge: '知识科普',
   qa: '求助问答',
   free: '自由话题',
@@ -99,6 +98,10 @@ Page({
   onReply(e) {
     const { id, name } = e.currentTarget.dataset;
     this.setData({ replyTo: name, replyToId: id });
+  },
+
+  onCancelReply() {
+    this.setData({ replyTo: '', replyToId: '' });
   },
 
   onReport(e) {

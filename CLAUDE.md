@@ -7,7 +7,7 @@ A WeChat Mini Program community forum ("脑桥") designed for brain injury patie
 **Core Principles (Non-negotiable):**
 
 1. **Humanitarianism First** — User dignity and safety are the top priority. Zero tolerance for discrimination, mockery, or false medical information.
-2. **Accessibility by Default** — The default UI must be simple, clear, large-font, and high-contrast. Accessibility is not an add-on mode.
+2. **Clean Forum Design** — UI based on egg-24time's card-based forum style with light blue theme (#4A90D9). Accessibility adaptations planned for Phase 2.
 3. **Rationalism as Guardian** — Encourage scientific discussion, flag unverified information, prevent pseudoscience and quack remedies.
 
 **Product Name:** 脑桥 (NaoBridge)
@@ -278,8 +278,7 @@ wx.cloud.callContainer({
 | Key | Chinese Label |
 |-----|--------------|
 | `recovery` | 康复日记 |
-| `bci` | 脑机接口讨论 |
-| `emotional` | 情感互助 |
+| `bci` | 脑机接口 |
 | `knowledge` | 知识科普 |
 | `qa` | 求助问答 |
 | `free` | 自由话题 |
@@ -302,18 +301,17 @@ The security check runs in `post.create()` and `comment.create()` service method
 - **All user-facing text:** Chinese (中文)
 - **File names:** kebab-case (e.g., `post-detail`, `create-post`)
 
-### CSS / WXSS Accessibility Standards (Mandatory)
+### CSS / WXSS Design Standards
 
 ```css
-/* Minimum standards — every page must comply */
-font-size: >= 16px;          /* Body text minimum */
-font-size: >= 20px;          /* Headings */
-line-height: 1.8;            /* Line spacing */
-min-width: 44px;             /* Touch target minimum */
-min-height: 44px;            /* Touch target minimum */
-/* Color contrast ratio >= 4.5:1 (WCAG AA) */
-/* Never use color alone to convey information */
-/* All interactive elements must have clear focus states */
+/* Based on egg-24time card-based forum style */
+/* Primary color: #4A90D9 (light blue) */
+/* Page background: #F2F1F6 */
+/* Card separators: 5px #F2F1F6 solid */
+/* Body text: 32rpx, color #444 */
+/* Secondary text: 28rpx, color #888 */
+/* Avatar: 72rpx circle with border-radius */
+/* Layout: Flexbox utility classes */
 ```
 
 ## Security Principles
@@ -329,18 +327,22 @@ min-height: 44px;            /* Touch target minimum */
 9. **Error Handler** — `error_handler` middleware catches all errors, maps to unified error codes, hides internal details from clients.
 10. **No Hardcoded Secrets** — Production config (`config.prod.js`) reads all credentials from environment variables. Required: `MYSQL_USERNAME`, `MYSQL_PASSWORD`, `JWT_SECRET`. Optional: `WX_APPID`, `WX_APPSECRET`, `REDIS_ADDRESS`.
 
-## Accessibility Design Principles
+## Frontend Design
 
-These are **default behaviors**, not optional features:
+Based on [egg-24time](https://github.com/seasonstar/weapp-24time) forum framework with light blue theme.
 
-1. **Large Font Default** — Body text 16px minimum, headings 20px+, line-height 1.8
-2. **High Contrast** — Color contrast ratio >= 4.5:1 (WCAG AA). Never rely on color alone for meaning.
-3. **Large Touch Targets** — All clickable/tappable elements minimum 44x44px
-4. **Minimal Steps** — Core flows (post, comment, report) complete in 3 steps or fewer
-5. **Clear Feedback** — Every user action produces visible text feedback (success/failure toast or modal). Never use color-only feedback.
-6. **No Auto-play** — No auto-playing media or animations that cannot be paused
-7. **Semantic Markup** — Use appropriate ARIA roles and labels where supported by Mini Program framework
-8. **Avoid Red/Green Distinction** — Do not use red vs green as the only way to differentiate states
+**Design System:**
+- **Style:** Card-based feed, Twitter/Weibo-inspired, clean and minimal
+- **Primary color:** `#4A90D9` (light blue)
+- **Page background:** `#F2F1F6`
+- **Card background:** `#FFFFFF` with `5px #F2F1F6` separator borders
+- **Text colors:** `#444` (primary), `#888` (secondary/time)
+- **Layout:** Flexbox utility classes (`.flex`, `.flex-row`, `.flex-auto`, `.flex-vcenter`)
+- **Icons:** Image-based (not icon fonts)
+- **FAB button:** Fixed bottom-right, light blue circle, for creating posts
+
+**Accessibility (Phase 2):**
+- Large font adaptation, high contrast mode, large touch targets — planned for post-MVP
 
 ## MVP Feature Scope (Phase 1)
 

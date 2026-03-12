@@ -1,42 +1,58 @@
-/* Profile Page Styles */
-.page-container {
-  padding: 24rpx;
+/* Profile Page — Light Blue Card Theme */
+
+.profile-page {
   min-height: 100vh;
+  background-color: #F2F1F6;
+  padding: 30rpx;
 }
 
-.page-title {
+/* ---- Registration ---- */
+
+.reg-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #444;
   text-align: center;
-  margin-bottom: 32rpx;
-  padding-top: 24rpx;
+  padding: 20rpx 0 30rpx;
 }
 
-/* Form Styles */
+.reg-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 36rpx 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
 .form-group {
-  margin-bottom: 32rpx;
+  margin-bottom: 30rpx;
 }
 
 .form-label {
-  font-size: 16px;
-  font-weight: bold;
-  color: #1A1A1A;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
   margin-bottom: 12rpx;
 }
 
 .form-input {
   width: 100%;
-  height: 48px;
-  border: 2rpx solid #CCCCCC;
-  border-radius: 8rpx;
+  height: 80rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 10rpx;
   padding: 0 20rpx;
-  font-size: 16px;
+  font-size: 14px;
+  color: #444;
   box-sizing: border-box;
+  background: #FAFAFA;
 }
 
 .form-input:focus {
-  border-color: #2C5F8A;
+  border-color: #4A90D9;
+  background: #fff;
 }
 
-/* Role Selection */
+/* Role selector */
+
 .role-options {
   display: flex;
   gap: 16rpx;
@@ -45,135 +61,179 @@
 
 .role-option {
   flex: 1;
-  min-width: 180rpx;
-  padding: 20rpx 16rpx;
-  border: 2rpx solid #CCCCCC;
+  min-width: 170rpx;
+  padding: 18rpx 12rpx;
+  border: 1rpx solid #ddd;
   border-radius: 12rpx;
   text-align: center;
-  min-height: 44px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8rpx;
+  gap: 6rpx;
+  background: #FAFAFA;
+  transition: all 0.2s;
 }
 
 .role-selected {
-  border-color: #2C5F8A;
-  background-color: #E8F0F8;
+  border-color: #4A90D9;
+  background: #EBF3FC;
 }
 
 .role-emoji {
-  font-size: 28px;
+  font-size: 24px;
 }
 
-.role-label {
-  font-size: 16px;
-  color: #333333;
+.role-text {
+  font-size: 13px;
+  color: #444;
 }
 
-/* Rules Checkbox */
-.rules-check {
+/* Rules checkbox */
+
+.rules-row {
   display: flex;
   align-items: center;
   gap: 12rpx;
-  min-height: 44px;
+  padding: 8rpx 0;
 }
 
-.checkbox {
-  width: 44rpx;
-  height: 44rpx;
-  border: 2rpx solid #CCCCCC;
+.check-box {
+  width: 36rpx;
+  height: 36rpx;
+  border: 1rpx solid #ccc;
   border-radius: 6rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: #FFFFFF;
+  font-size: 12px;
+  color: #fff;
+  flex-shrink: 0;
 }
 
-.checkbox-checked {
-  background-color: #2C5F8A;
-  border-color: #2C5F8A;
+.checked {
+  background-color: #4A90D9;
+  border-color: #4A90D9;
 }
 
-.rules-text {
-  font-size: 16px;
-  color: #2C5F8A;
-  text-decoration: underline;
+.rules-link {
+  font-size: 13px;
+  color: #4A90D9;
 }
 
-/* Submit Button */
+/* Submit button */
+
 .submit-btn {
   width: 100%;
-  margin-top: 24rpx;
-  font-size: 18px;
-  min-height: 50px;
+  height: 84rpx;
+  line-height: 84rpx;
+  background: #4A90D9;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 12rpx;
+  margin-top: 16rpx;
+  text-align: center;
 }
 
 .submit-btn[disabled] {
-  background-color: #AAAAAA;
-  color: #FFFFFF;
+  background: #B8D4EE;
+  color: #fff;
 }
 
-/* Profile Header */
-.profile-header {
+.submit-btn::after {
+  border: none;
+}
+
+/* ---- Profile View ---- */
+
+.profile-card {
   display: flex;
   align-items: center;
   gap: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 36rpx 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
 .avatar {
-  width: 120rpx;
-  height: 120rpx;
+  width: 110rpx;
+  height: 110rpx;
   border-radius: 50%;
-  background-color: #E0E0E0;
+  background: #E8E8E8;
+  flex-shrink: 0;
 }
 
-.profile-info {
+.user-info {
   flex: 1;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .role-badge {
-  font-size: 14px;
-  color: #FFFFFF;
-  background-color: #2C5F8A;
-  padding: 4rpx 16rpx;
-  border-radius: 20rpx;
   display: inline-block;
-  margin-top: 8rpx;
+  font-size: 12px;
+  color: #fff;
+  background: #4A90D9;
+  padding: 4rpx 18rpx;
+  border-radius: 20rpx;
 }
 
-/* Menu List */
-.menu-list {
-  padding: 0;
+/* Menu card */
+
+.menu-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-top: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .menu-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx;
-  min-height: 44px;
-  border-bottom: 1rpx solid #EEEEEE;
+  padding: 28rpx 30rpx;
+  border-bottom: 1rpx solid #F0F0F0;
 }
 
-.menu-item:last-child {
+.menu-item-last {
   border-bottom: none;
 }
 
-.menu-text {
-  font-size: 16px;
-  color: #333333;
+.menu-label {
+  font-size: 15px;
+  color: #444;
 }
 
 .menu-arrow {
-  font-size: 16px;
-  color: #999999;
+  font-size: 18px;
+  color: #ccc;
 }
 
-/* Loading */
-.loading-overlay {
+/* Disclaimer */
+
+.disclaimer-bar {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  padding: 36rpx 0 20rpx;
+}
+
+/* Loading overlay */
+
+.loading-mask {
   position: fixed;
   top: 0;
   left: 0;
@@ -182,10 +242,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 100;
 }
 
-.loading-text {
-  font-size: 16px;
-  color: #666666;
+.loading-label {
+  font-size: 14px;
+  color: #888;
 }

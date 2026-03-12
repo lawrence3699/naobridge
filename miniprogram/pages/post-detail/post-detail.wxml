@@ -1,122 +1,87 @@
-<!-- Post Detail Page -->
-<view class="page-container">
-  <block wx:if="{{post}}">
-    <!-- Post content -->
-    <view class="card post-content">
-      <view class="post-meta">
-        <view class="author-info">
-          <image
-            class="author-avatar"
-            src="{{post.author.avatarUrl || '/images/default-avatar.png'}}"
-            mode="aspectFill"
-          />
-          <view class="author-detail">
-            <text class="author-name">{{post.author.nickName}}</text>
-            <text class="post-date">{{postDate}}</text>
-          </view>
-        </view>
-        <text class="category-tag">{{categoryLabel}}</text>
+<view class="container" wx:if="{{post}}">
+  <!-- Post Card -->
+  <view class="post-section">
+    <view class="post-header">
+      <image class="avatar" src="{{post.author.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="meta">
+        <text class="username">{{post.author.nickName}}</text>
+        <text class="time">{{postDate}}</text>
       </view>
-
-      <view class="heading-1 post-title">{{post.title}}</view>
-
-      <view class="post-body">
-        <text class="body-text">{{post.content}}</text>
-      </view>
-
-      <!-- Images -->
-      <view wx:if="{{post.images && post.images.length > 0}}" class="post-images">
-        <image
-          wx:for="{{post.images}}"
-          wx:key="*this"
-          class="post-image"
-          src="{{item}}"
-          mode="widthFix"
-          bindtap="onPreviewImage"
-          data-url="{{item}}"
-        />
-      </view>
-
-      <!-- Stats -->
-      <view class="post-stats">
-        <text class="stat-item">浏览 {{post.viewCount}}</text>
-        <text class="stat-item">点赞 {{post.likeCount}}</text>
-        <text class="stat-item">评论 {{post.commentCount}}</text>
-      </view>
+      <text class="category-tag" wx:if="{{categoryLabel}}">{{categoryLabel}}</text>
     </view>
 
-    <!-- Action buttons -->
-    <view class="action-bar card">
-      <view class="action-btn" bindtap="onReport" data-type="post" data-id="{{post._id}}">
-        <text class="action-text">举报</text>
-      </view>
-      <view wx:if="{{isAuthor}}" class="action-btn action-danger" bindtap="onDeletePost">
-        <text class="action-text">删除</text>
-      </view>
+    <view class="post-title">{{post.title}}</view>
+
+    <view class="post-body">
+      <text class="content">{{post.content}}</text>
     </view>
 
-    <!-- Comments section -->
-    <view class="card comments-section">
-      <view class="heading-2 section-title">
-        评论 ({{comments.length}})
-      </view>
-
-      <block wx:if="{{post.commentEnabled}}">
-        <!-- Comment list -->
-        <view wx:for="{{comments}}" wx:key="_id" class="comment-item">
-          <view class="comment-header">
-            <text class="comment-author">{{item.authorName}}</text>
-            <text class="comment-time">{{item.timeAgo}}</text>
-          </view>
-          <text class="comment-content">{{item.content}}</text>
-
-          <!-- Nested replies -->
-          <view wx:if="{{item.replies && item.replies.length > 0}}" class="reply-list">
-            <view wx:for="{{item.replies}}" wx:for-item="reply" wx:key="_id" class="reply-item">
-              <text class="reply-author">{{reply.authorName}}</text>
-              <text class="reply-content">: {{reply.content}}</text>
-            </view>
-          </view>
-
-          <view class="comment-actions">
-            <view class="comment-action" bindtap="onReply" data-id="{{item._id}}" data-name="{{item.authorName}}">
-              <text>回复</text>
-            </view>
-            <view class="comment-action" bindtap="onReport" data-type="comment" data-id="{{item._id}}">
-              <text>举报</text>
-            </view>
-          </view>
-        </view>
-
-        <!-- Empty comments -->
-        <view wx:if="{{comments.length === 0}}" class="empty-comments">
-          <text class="empty-text">还没有评论，来说两句吧</text>
-        </view>
-      </block>
-
-      <view wx:else class="comments-disabled">
-        <text class="disabled-text">帖主已关闭评论</text>
-      </view>
+    <view class="post-images" wx:if="{{post.images && post.images.length > 0}}">
+      <image wx:for="{{post.images}}" wx:key="*this"
+        src="{{item}}" mode="widthFix" class="detail-img"
+        bindtap="onPreviewImage" data-url="{{item}}" />
     </view>
-  </block>
 
-  <!-- Loading -->
-  <view wx:if="{{loading}}" class="loading-state">
-    <text class="loading-text">加载中...</text>
+    <view class="post-stats">
+      <view class="stat-item">{{post.viewCount}} 浏览</view>
+      <view class="stat-item">{{post.likeCount}} 赞</view>
+      <view class="stat-item">{{post.commentCount}} 评论</view>
+    </view>
+
+    <view class="post-actions">
+      <view class="action-item" bindtap="onReport" data-type="post" data-id="{{post._id}}">举报</view>
+      <view wx:if="{{isAuthor}}" class="action-item action-danger" bindtap="onDeletePost">删除</view>
+    </view>
   </view>
 
-  <!-- Comment input bar (fixed bottom) -->
-  <view wx:if="{{post && post.commentEnabled}}" class="comment-bar">
-    <input
-      class="comment-input"
-      placeholder="{{replyTo ? '回复 ' + replyTo + '...' : '写评论...'}}"
-      value="{{commentText}}"
-      bindinput="onCommentInput"
-      confirm-type="send"
-      bindconfirm="onSendComment"
-    />
-    <button class="btn-primary send-btn" bindtap="onSendComment" disabled="{{!commentText.trim()}}">
-      发送
-    </button>
+  <!-- Comments Section -->
+  <view class="comment-section">
+    <view class="section-title">评论 ({{comments.length}})</view>
+
+    <block wx:if="{{post.commentEnabled}}">
+      <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+        <view class="comment-header">
+          <image class="comment-avatar" src="{{item.authorAvatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="comment-meta">
+            <text class="comment-user">{{item.authorName}}</text>
+            <text class="comment-time">{{item.timeAgo}}</text>
+          </view>
+        </view>
+        <text class="comment-content">{{item.content}}</text>
+
+        <!-- Nested replies -->
+        <view wx:if="{{item.replies && item.replies.length > 0}}" class="reply-list">
+          <view wx:for="{{item.replies}}" wx:for-item="reply" wx:key="_id" class="reply-item">
+            <text class="reply-author">{{reply.authorName}}</text>
+            <text class="reply-text">: {{reply.content}}</text>
+          </view>
+        </view>
+
+        <view class="comment-actions">
+          <text class="action-link" bindtap="onReply" data-id="{{item._id}}" data-name="{{item.authorName}}">回复</text>
+          <text class="action-link" bindtap="onReport" data-type="comment" data-id="{{item._id}}">举报</text>
+        </view>
+      </view>
+
+      <view class="empty-tip" wx:if="{{comments.length === 0}}">还没有评论，来说两句吧</view>
+    </block>
+
+    <view class="empty-tip" wx:if="{{!post.commentEnabled}}">帖主已关闭评论</view>
+  </view>
+</view>
+
+<!-- Loading -->
+<view class="loading" wx:if="{{loading}}">加载中...</view>
+
+<!-- Comment Input Bar -->
+<view wx:if="{{post && post.commentEnabled}}" class="input-bar">
+  <view class="reply-hint" wx:if="{{replyTo}}" bindtap="onCancelReply">
+    回复 {{replyTo}} ✕
+  </view>
+  <view class="input-row">
+    <input class="comment-input" placeholder="{{replyTo ? '回复 ' + replyTo + '...' : '写评论...'}}"
+      value="{{commentText}}" bindinput="onCommentInput"
+      confirm-type="send" bindconfirm="onSendComment" />
+    <button class="send-btn" bindtap="onSendComment" disabled="{{!commentText.trim()}}">发送</button>
   </view>
 </view>

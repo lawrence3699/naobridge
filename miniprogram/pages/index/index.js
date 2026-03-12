@@ -2,22 +2,20 @@ const { postApi } = require('../../utils/api');
 const { formatTimeAgo } = require('../../utils/time');
 
 const CATEGORIES = [
-  { value: '', label: '全部', emoji: '📋' },
-  { value: 'recovery', label: '康复日记', emoji: '💬' },
-  { value: 'bci', label: '脑机接口', emoji: '🔬' },
-  { value: 'emotional', label: '情感互助', emoji: '❤️' },
-  { value: 'knowledge', label: '知识科普', emoji: '📚' },
-  { value: 'qa', label: '求助问答', emoji: '❓' },
-  { value: 'free', label: '自由话题', emoji: '🗣️' }
+  { value: '', label: '全部' },
+  { value: 'recovery', label: '康复日记' },
+  { value: 'bci', label: '脑机接口' },
+  { value: 'knowledge', label: '知识科普' },
+  { value: 'qa', label: '求助问答' },
+  { value: 'free', label: '自由话题' },
 ];
 
 const CATEGORY_LABELS = {
   recovery: '康复日记',
   bci: '脑机接口',
-  emotional: '情感互助',
   knowledge: '知识科普',
   qa: '求助问答',
-  free: '自由话题'
+  free: '自由话题',
 };
 
 const PAGE_SIZE = 20;
@@ -29,7 +27,8 @@ Page({
     posts: [],
     loading: false,
     hasMore: true,
-    page: 1
+    refreshing: false,
+    page: 1,
   },
 
   onLoad() {
@@ -37,7 +36,6 @@ Page({
   },
 
   onShow() {
-    // Refresh if returning from create-post
     if (this._needRefresh) {
       this.loadPosts(true);
       this._needRefresh = false;
@@ -47,6 +45,12 @@ Page({
   onPullDownRefresh() {
     this.loadPosts(true).then(() => {
       wx.stopPullDownRefresh();
+    });
+  },
+
+  onPullRefresh() {
+    this.loadPosts(true).then(() => {
+      this.setData({ refreshing: false });
     });
   },
 
@@ -63,26 +67,47 @@ Page({
     );
 
     if (result.code === 0) {
-      const newPosts = result.data.posts.map(post => ({
-        ...post,
-        contentPreview: post.content.slice(0, 100),
-        categoryLabel: CATEGORY_LABELS[post.category] || '',
-        timeAgo: formatTimeAgo(post.createdAt)
-      }));
+      const rawPosts = result.data.rows || result.data.posts || [];
+      const total = result.data.count != null
+        ? result.data.count
+        : (result.data.pagination ? result.data.pagination.total : 0);
 
+      const newPosts = rawPosts.map(post => this._mapPost(post));
       const allPosts = reset ? newPosts : [...this.data.posts, ...newPosts];
-      const hasMore = allPosts.length < result.data.pagination.total;
+      const hasMore = allPosts.length < total;
 
       this.setData({
         posts: allPosts,
         page: page + 1,
         hasMore,
-        loading: false
+        loading: false,
       });
     } else {
       this.setData({ loading: false });
-      wx.showToast({ title: result.message || '加载失败', icon: 'none' });
+      wx.showToast({ title: result.msg || result.message || '加载失败', icon: 'none' });
     }
+  },
+
+  /**
+   * Map raw API post object to view model
+   */
+  _mapPost(post) {
+    const user = post.user || {};
+    const images = post.images || [];
+    const imageUrls = images.map(img => (typeof img === 'string' ? img : img.url));
+
+    return {
+      id: post.id || post._id,
+      authorName: user.name || post.authorName || '匿名用户',
+      avatarUrl: user.avatar || post.avatarUrl || '',
+      title: post.title || '',
+      contentPreview: (post.content || '').slice(0, 120),
+      categoryLabel: CATEGORY_LABELS[post.category] || '',
+      timeAgo: formatTimeAgo(post.createdAt),
+      commentCount: post.num_comments || post.commentCount || 0,
+      likeCount: post.num_likes || post.likeCount || 0,
+      imageUrls,
+    };
   },
 
   onSwitchCategory(e) {
@@ -106,9 +131,17 @@ Page({
     wx.navigateTo({ url: '/pages/create-post/create-post' });
   },
 
-  onLoadMore() {
-    if (this.data.hasMore) {
+  onScrollToLower() {
+    if (this.data.hasMore && !this.data.loading) {
       this.loadPosts(false);
     }
-  }
+  },
+
+  onPreviewImage(e) {
+    const { url, urls } = e.currentTarget.dataset;
+    wx.previewImage({
+      current: url,
+      urls: urls || [url],
+    });
+  },
 });
